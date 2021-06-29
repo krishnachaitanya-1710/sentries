@@ -18,8 +18,8 @@ func init() {
 
 func (s s3Bucket) ExecuteRules(resources string) {
 	bucket := "test2-xyx-hell"
-	//s3DefaultEncryptionCheck(bucket)
-	//s3VersioningCheck(bucket)
+	s3DefaultEncryptionCheck(bucket)
+	s3VersioningCheck(bucket)
 	s3PublicAclCheck(bucket)
 }
 
@@ -48,8 +48,7 @@ func s3DefaultEncryptionCheck(bucket string) {
 		logger.DebugS(algorithm)
 		utilities.ExecuteRule(
 			algorithm == "AES256",
-			"pass	- s3 server side encryption rule",
-			"fail	- s3 server side encryption rule",
+			"s3 server side encryption rule",
 			"Encryption feature is not enabled for s3 Bucket "+bucket,
 		)
 	} else {
@@ -71,8 +70,7 @@ func s3VersioningCheck(bucket string) {
 		versioning := aws.ToString((*string)(&response.Status))
 		utilities.ExecuteRule(
 			versioning == "Enabled",
-			"pass	- s3 version rule",
-			"fail	- s3 version rule",
+			"s3 version rule",
 			"Versioning feature is not enabled for s3 Bucket "+bucket,
 		)
 	} else {

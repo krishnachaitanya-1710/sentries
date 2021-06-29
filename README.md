@@ -6,10 +6,10 @@ Sentries is a security and compliance scanner application, built to scan cloud i
 
 ### Contents
 
-* [Introduction]
+* [Introduction](#introduction)
 * [How to Use ?]
 * [Components]
 
 
-<a name="Introduction"></a>
+<a name="introduction"></a>
 #### Introduction

@@ -54,11 +54,11 @@ func FirstNonNil(values ...interface{}) interface{} {
 
 // Looping over elements in slices, arrays, maps, channels or strings is often better done with a range loop.
 
-func ExecuteRule(condition bool, successMsg, failureMsg, violationContext string) {
+func ExecuteRule(condition bool, message, violationContext string) {
 	if condition {
-		logger.StreamGreen(successMsg)
+		logger.StreamGreen("pass	- " + message)
 	} else {
-		logger.StreamRed(failureMsg)
+		logger.StreamRed("fail	- " + message)
 		logger.StreamBlue(violationContext)
 	}
 }
