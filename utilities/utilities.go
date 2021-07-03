@@ -59,7 +59,7 @@ func ExecuteRule(condition bool, message, violationContext string) {
 		logger.StreamGreen("pass	- " + message)
 	} else {
 		logger.StreamRed("fail	- " + message)
-		logger.StreamBlue(violationContext)
+		//logger.StreamBlue(violationContext)
 	}
 }
 

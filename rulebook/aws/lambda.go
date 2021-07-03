@@ -16,15 +16,10 @@ func init() {
 }
 
 func (r *lambdaFunction) ExecuteRules(resources string) {
-	logger.Info("checking for lambda")
-	//functionName := "oh-test-function"
-	//region := "us-east-1"
-	//allowedRegions := "us-east-1"
 	lambdas := listLambdaFunctions([]string{"us-east-1"})
-
-	for _, lambdas := range lambdas {
-		//fmt.Println(aws.StringValue(lambdas.FunctionName))
-		lambdaComplianceRulesCheck(aws.StringValue(lambdas.FunctionName), "us-east-1")
+	for _, lambda := range lambdas {
+		logger.InfoS("Applying compliance rules against :: " + aws.StringValue(lambda.FunctionName))
+		lambdaComplianceRulesCheck(aws.StringValue(lambda.FunctionName), "us-east-1")
 	}
 
 }
@@ -82,7 +77,9 @@ func lambdaComplianceRulesCheck(functionName, region string) {
 		//res, err1 := svc.ListTags(input)
 		//fmt.Println(utilities.GetKeysofMap(res.Tags))
 		//fmt.Println(err1)
-		//validateLambdaDependencies(lambdaConfig)
+		if lambdaConfig.VpcConfig != nil {
+			validateLambdaDependencies(lambdaConfig)
+		}
 	}
 }
 
