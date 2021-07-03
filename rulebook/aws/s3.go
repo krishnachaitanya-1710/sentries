@@ -4,7 +4,6 @@ import (
 	logger "../../logger"
 	utilities "../../utilities"
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -18,6 +17,7 @@ func init() {
 
 func (s s3Bucket) ExecuteRules(resources string) {
 	bucket := "test2-xyx-hell"
+	s3ListBuckets()
 	s3DefaultEncryptionCheck(bucket)
 	s3VersioningCheck(bucket)
 	s3PublicAclCheck(bucket)
@@ -31,6 +31,15 @@ func setS3BucketSession() *s3.Client {
 	}
 	client := s3.NewFromConfig(cfg)
 	return client
+}
+
+func s3ListBuckets() {
+	//client := setS3BucketSession()
+	//getInput := &s3.ListBucketsInput{}
+	//response, err := client.ListBuckets(context.TODO(), getInput)
+	//fmt.Println("checking for existing buckets")
+	//fmt.Println(response)
+	//fmt.Println(err)
 }
 
 func s3DefaultEncryptionCheck(bucket string) {
@@ -79,15 +88,15 @@ func s3VersioningCheck(bucket string) {
 }
 
 func s3PublicAclCheck(bucket string) {
-	client := setS3BucketSession()
-	getInput := &s3.GetBucketAclInput{
-		Bucket: aws.String(bucket),
-	}
-	response, err := client.GetBucketAcl(context.TODO(), getInput)
-	fmt.Println(response.Grants)
-	if err != nil {
-		logger.Fatal("Unable to get bucket acl due to - " + err.Error())
-	}
+	//client := setS3BucketSession()
+	//getInput := &s3.GetBucketAclInput{
+	//	Bucket: aws.String(bucket),
+	//}
+	//response, err := client.GetBucketAcl(context.TODO(), getInput)
+	//fmt.Println(response.Grants)
+	//if err != nil {
+	//	logger.Fatal("Unable to get bucket acl due to - " + err.Error())
+	//}
 	//if response != nil && response.ServerSideEncryptionConfiguration != nil {
 	//	algorithm := aws.ToString((*string)(&response.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm))
 	//	logger.DebugS(algorithm)

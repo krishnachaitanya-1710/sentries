@@ -62,3 +62,19 @@ func ExecuteRule(condition bool, message, violationContext string) {
 		logger.StreamBlue(violationContext)
 	}
 }
+
+func GetKeysofMap(userMap map[string]*string) []string {
+	keys := make([]string, 0, len(userMap))
+	for k := range userMap {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
+func getValues(userMap map[string]string) []string {
+	values := make([]string, 0, len(userMap))
+	for _, value := range userMap {
+		values = append(values, value)
+	}
+	return values
+}

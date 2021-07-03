@@ -17,17 +17,30 @@ func init() {
 
 func (r *lambdaFunction) ExecuteRules(resources string) {
 	logger.Info("checking for lambda")
-	functionName := "oh-test-function"
-	region := "us-east-1"
-	lambdaComplianceRulesCheck(functionName, region)
+	//functionName := "oh-test-function"
+	//region := "us-east-1"
+	//allowedRegions := "us-east-1"
+	lambdas := listLambdaFunctions([]string{"us-east-1"})
+
+	for _, lambdas := range lambdas {
+		//fmt.Println(aws.StringValue(lambdas.FunctionName))
+		lambdaComplianceRulesCheck(aws.StringValue(lambdas.FunctionName), "us-east-1")
+	}
+
+}
+
+func listLambdaFunctions(allowedRegions []string) []*lambda.FunctionConfiguration {
+	svc := setNewSession("us-east-1")
+	input := &lambda.ListFunctionsInput{}
+	response, err := svc.ListFunctions(input)
+	fmt.Println(err)
+
+	return response.Functions
 }
 
 func lambdaComplianceRulesCheck(functionName, region string) {
 	// Example sending a request using the GetBucketEncryptionRequest method.
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
-	svc := lambda.New(sess, &aws.Config{Region: aws.String(region)})
+	svc := setNewSession(region)
 
 	getInput := &lambda.GetFunctionInput{
 		FunctionName: &functionName,
@@ -46,7 +59,6 @@ func lambdaComplianceRulesCheck(functionName, region string) {
 		)
 		if lambdaConfig.VpcConfig != nil {
 			//need to get the info about public subnets
-
 			utilities.ExecuteRule(
 				lambdaConfig.VpcConfig != nil,
 				"lambda function public subnet rule",
@@ -64,8 +76,22 @@ func lambdaComplianceRulesCheck(functionName, region string) {
 			"lambda environment variable encryption check rule",
 			"Lambda environment variables are not encrypted",
 		)
-		validateLambdaDependencies(lambdaConfig)
+		//input := &lambda.ListTagsInput{
+		//	Resource: aws.String(*lambdaConfig.FunctionArn),
+		//}
+		//res, err1 := svc.ListTags(input)
+		//fmt.Println(utilities.GetKeysofMap(res.Tags))
+		//fmt.Println(err1)
+		//validateLambdaDependencies(lambdaConfig)
 	}
+}
+
+func setNewSession(region string) *lambda.Lambda {
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
+	svc := lambda.New(sess, &aws.Config{Region: aws.String(region)})
+	return svc
 }
 
 func validateLambdaDependencies(lambdaConfig *lambda.FunctionConfiguration) {
@@ -78,7 +104,6 @@ func validateLambdaDependencies(lambdaConfig *lambda.FunctionConfiguration) {
 		"lambda function created in default vpc",
 	)
 	for _, value := range securityGroupsConfig {
-		fmt.Println(len(value.IpPermissions))
 		utilities.ExecuteRule(
 			len(value.IpPermissions) == 0,
 			"lambda security group ingress rule check",
