@@ -5,5 +5,5 @@ var awsRegion = "us-east-1"
 var allowedRegions []string
 
 type service interface {
-	ExecuteRules(resources string)
+	ExecuteRules(resources, skipRules []string)
 }

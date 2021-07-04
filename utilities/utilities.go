@@ -1,7 +1,8 @@
 package utilities
 
 import (
-	"../logger"
+	"github.com/krishnachaitanya-1710/sentries/globalvar"
+	"github.com/krishnachaitanya-1710/sentries/logger"
 	"os"
 )
 
@@ -54,13 +55,55 @@ func FirstNonNil(values ...interface{}) interface{} {
 
 // Looping over elements in slices, arrays, maps, channels or strings is often better done with a range loop.
 
+//{
+//  "rule_version": "",
+//  "rule_name": "xyz",
+//  "rule_category": "",
+//  "rule_id": "",
+//  "rule_description": "",
+//  "control_standard": "",
+//  "severity": "critical/medium/low"
+//}
+
 func ExecuteRule(condition bool, message, violationContext string) {
 	if condition {
 		logger.StreamGreen("pass	- " + message)
 	} else {
 		logger.StreamRed("fail	- " + message)
-		//logger.StreamBlue(violationContext)
+		if IsFlagPassed("--violation-context") {
+			logger.StreamBlue(violationContext)
+		}
+		globalvar.ComplianceStatus = false
+		globalvar.ViolationContext = append(globalvar.ViolationContext, violationContext)
 	}
+	globalvar.RuleCount++
+	globalvar.RuleNames = append(globalvar.RuleNames, message)
+}
+
+func IsFlagPassed(val string) bool {
+	for _, item := range os.Args {
+		if item == val {
+			return true
+		}
+	}
+	return false
+}
+
+func RemoveDuplicatesFromSlice(s []string) []string {
+	m := make(map[string]bool)
+	for _, item := range s {
+		if _, ok := m[item]; ok {
+			// duplicate item
+			//fmt.Println(item, "is a duplicate")
+		} else {
+			m[item] = true
+		}
+	}
+	var result []string
+	for item, _ := range m {
+		result = append(result, item)
+	}
+	return result
 }
 
 func GetKeysofMap(userMap map[string]*string) []string {

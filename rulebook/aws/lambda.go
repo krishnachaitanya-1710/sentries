@@ -1,12 +1,12 @@
 package aws
 
 import (
-	logger "../../logger"
-	utilities "../../utilities"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/krishnachaitanya-1710/sentries/globalvar"
+	"github.com/krishnachaitanya-1710/sentries/logger"
+	"github.com/krishnachaitanya-1710/sentries/utilities"
 )
 
 type lambdaFunction struct{}
@@ -15,21 +15,20 @@ func init() {
 	InstMap["lambdaFunction"] = new(lambdaFunction)
 }
 
-func (r *lambdaFunction) ExecuteRules(resources string) {
+func (r *lambdaFunction) ExecuteRules(resources, skipRules []string) {
 	lambdas := listLambdaFunctions([]string{"us-east-1"})
 	for _, lambda := range lambdas {
-		logger.InfoS("Applying compliance rules against :: " + aws.StringValue(lambda.FunctionName))
+		logger.DebugS("Applying compliance rules against :: " + aws.StringValue(lambda.FunctionName))
 		lambdaComplianceRulesCheck(aws.StringValue(lambda.FunctionName), "us-east-1")
+		globalvar.ResourceCount++
+		globalvar.ResourceArns = append(globalvar.ResourceArns, aws.StringValue(lambda.FunctionArn))
 	}
-
 }
 
 func listLambdaFunctions(allowedRegions []string) []*lambda.FunctionConfiguration {
 	svc := setNewSession("us-east-1")
 	input := &lambda.ListFunctionsInput{}
-	response, err := svc.ListFunctions(input)
-	fmt.Println(err)
-
+	response, _ := svc.ListFunctions(input)
 	return response.Functions
 }
 
@@ -71,12 +70,6 @@ func lambdaComplianceRulesCheck(functionName, region string) {
 			"lambda environment variable encryption check rule",
 			"Lambda environment variables are not encrypted",
 		)
-		//input := &lambda.ListTagsInput{
-		//	Resource: aws.String(*lambdaConfig.FunctionArn),
-		//}
-		//res, err1 := svc.ListTags(input)
-		//fmt.Println(utilities.GetKeysofMap(res.Tags))
-		//fmt.Println(err1)
 		if lambdaConfig.VpcConfig != nil {
 			validateLambdaDependencies(lambdaConfig)
 		}

@@ -36,21 +36,19 @@ Contents
 <a name="example_usage"></a>
 ## Usage
 
-An Example usage as shown below
+Available Options:
 
-```
-	sentries inspect 
-	
-	response:
-		 pass   - lambda function with out vpc rule
-		 pass   - lambda function public subnet rule
-		 pass   - lambda kmsKey encryption rule
-		 pass   - lambda environment variable encryption check rule
-		 fail   - s3 versioning rule
-		 fail   - s3 kmsKey encryption rule
-		 fail   - s3 default encryption rule
-		 
-```
+![usage](docs/images/Screen%20Shot%202021-07-04%20at%207.00.13%20PM.png)
+
+An Example usage as shown below:
+
+![example_run](docs/images/example_run.png)
+
+By default, sentries creates a response file `sentries_response.json` file, contains information about complinace scan summary and you can override filename with command line argment `outFile` and take a look at sample [response](sentries_response.json)
+
+
+
+
 
 ## Contributing
 

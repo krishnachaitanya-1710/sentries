@@ -1,8 +1,6 @@
 package aws
 
 import (
-	logger "../../logger"
-	utilities "../../utilities"
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -10,6 +8,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/krishnachaitanya-1710/sentries/globalvar"
+	"github.com/krishnachaitanya-1710/sentries/logger"
+	"github.com/krishnachaitanya-1710/sentries/utilities"
 	"os"
 )
 
@@ -19,15 +20,17 @@ func init() {
 	InstMap["s3Bucket"] = new(s3Bucket)
 }
 
-func (s s3Bucket) ExecuteRules(resources string) {
+func (s s3Bucket) ExecuteRules(resources, skipRules []string) {
 	buckets := s3ListBuckets()
 	for _, bucket := range buckets {
-		logger.InfoS("Applying compliance rules against :: " + bucket)
+		logger.DebugS("Applying compliance rules against :: " + bucket)
 		region := gets3BucketRegion(bucket)
+		bucketArn := "arn:aws:s3:::" + bucket
 		s3DefaultEncryptionCheck(bucket, region)
 		s3VersioningCheck(bucket, region)
+		globalvar.ResourceCount++
+		globalvar.ResourceArns = append(globalvar.ResourceArns, bucketArn)
 	}
-
 }
 
 // Create an Amazon S3 Client

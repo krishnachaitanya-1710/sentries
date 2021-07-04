@@ -1,10 +1,10 @@
 package aws
 
 import (
-	logger "../../logger"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/krishnachaitanya-1710/sentries/logger"
 )
 
 type elasticComputeCloud struct{}
@@ -13,7 +13,7 @@ func init() {
 	InstMap["elasticComputeCloud"] = new(elasticComputeCloud)
 }
 
-func (e elasticComputeCloud) ExecuteRules(resources string) {
+func (e elasticComputeCloud) ExecuteRules(resources, skipRules []string) {
 
 }
 
