@@ -1,8 +1,41 @@
 {
-"ComplianceStatus": false,
-"TotalRulesApplied": 0,
-"TotalResourceScanned": 0,
-"RuleNames": null,
-"ResourceArns": null,
-"ViolationContext": null
+	"ComplianceStatus": false,
+	"TotalRulesApplied": 19,
+	"TotalResourceScanned": 9,
+	"RuleNames": [
+		"lambda environment variable encryption check rule",
+		"lambda function public subnet rule",
+		"lambda function default vpc rule",
+		"lambda security group egress rule check",
+		"s3 server side encryption rule",
+		"s3 version rule",
+		"lambda function with out vpc rule",
+		"lambda kmsKey encryption rule",
+		"lambda security group ingress rule check"
+	],
+	"ResourceArns": [
+		"arn:aws:lambda:us-east-1:063561754197:function:oh-testing",
+		"arn:aws:lambda:us-east-1:063561754197:function:oh-test-function",
+		"arn:aws:s3:::oh-dev-hellproject-1234",
+		"arn:aws:s3:::oh-dev-hellproject-1234-1",
+		"arn:aws:s3:::sentriesbucket",
+		"arn:aws:s3:::test-mydevops-lecutre-237",
+		"arn:aws:s3:::test1-xyz-hell",
+		"arn:aws:s3:::test2-xyx-hell",
+		"arn:aws:s3:::test3-hell"
+	],
+	"ViolationContext": [
+		"Lambda Function is not using VPC configuration",
+		"Lambda is not encrypted",
+		"Lambda environment variables are not encrypted",
+		"lambda function created in default vpc",
+		"Lambda security group is having 0.0.0.0/0 egress rules",
+		"Lambda security group is having 0.0.0.0/0 egress rules",
+		"Versioning feature is not enabled for s3 Bucket oh-dev-hellproject-1234",
+		"Versioning feature is not enabled for s3 Bucket oh-dev-hellproject-1234-1",
+		"Versioning feature is not enabled for s3 Bucket sentriesbucket",
+		"Versioning feature is not enabled for s3 Bucket test1-xyz-hell",
+		"Versioning feature is not enabled for s3 Bucket test2-xyx-hell",
+		"Versioning feature is not enabled for s3 Bucket test3-hell"
+	]
 }
