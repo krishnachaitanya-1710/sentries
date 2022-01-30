@@ -1,1 +1,1 @@
-# sentries
+# sentrie
